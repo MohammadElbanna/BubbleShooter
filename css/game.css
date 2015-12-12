@@ -1,0 +1,35 @@
+.bubble {
+    position: absolute;
+    width: 7vmin;
+    height: 7vmin;
+    background-image: url("../assets/bubble_sprite_sheet.png");
+    background-size: 400%;
+/*    -webkit-transition: -webkit-transform 2s;*/
+    transition: -webkit-transform 2s;
+/*    transition: transform 2s;*/
+    
+}
+
+.curr_bubble {
+/*    used with .bubble*/
+    left: 50%;
+    top: 93%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+
+.bubble0 {
+    background-position: 0 0;
+}
+
+.bubble1 {
+    background-position: 0% 33.33333%;
+}
+
+.bubble2 {
+    background-position: 0% 66.66666%;
+}
+
+.bubble3 {
+    background-position: 0% 100%;
+}
