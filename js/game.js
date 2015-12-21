@@ -1,27 +1,39 @@
 import * as UI from "./ui.js";
 import * as Bubble from "./bubble.js";
+import * as Board from "./Model/Board.js";
+import * as Collision from "./collisionDetector.js";
 
-let currentBubble;
-let gameBoard = document.getElementById("game");
-let board = document.getElementById("board");
-let newGameButton = document.getElementById("new_game_button");
+let board ;
 
 export function init() {
-    newGameButton.addEventListener("click", startGame);
+    window.addEventListener("load" , function () {
+        UI.newGameButton.addEventListener("click", startGame);
+        window.addEventListener("resize", UI.resize);
+        document.body.addEventListener("orientationchange", UI.resize);
+    });
 }
     
 function startGame () {
-    newGameButton.removeEventListener("click", startGame);
+    Board.init(5,30);
+    UI.init();
+    UI.newGameButton.removeEventListener("click", startGame);
     UI.hideDialog();
     
-    // set the first current bubble
-    currentBubble = getNextBubble();
+//    UI.drawBoard();
+    
+    // set the first next bubble
+    UI.prepareNextBubble();
+    UI.resize();
+//    UI.drawBoard();
+    
+    
     // add event listner for mouse clicks on the board
-    gameBoard.addEventListener("touchstart", ballFiredHandler);
-    gameBoard.addEventListener("click", ballFiredHandler);
+    UI.gameBoard.addEventListener("touchstart", ballFiredHandler);
+    UI.gameBoard.addEventListener("click", ballFiredHandler);
 }
 
 function ballFiredHandler(event) {
+    
     let coordinates = {};
     if(event.type == "touchstart") {
         coordinates.x = event.changedTouches[0].pageX;
@@ -32,29 +44,65 @@ function ballFiredHandler(event) {
         coordinates.x = event.pageX;
         coordinates.y = event.pageY;
     }
+    // get the firing angle
+    let angle = getAngleFromDevice(coordinates);
     
-    let angle = UI.getAngleFromDevice(coordinates, currentBubble);
-
-    // let us assume that we will fire the ball for 1000px for now
-    let distanceX = (Math.sin(angle) * 800) ;
-    let distanceY =  (Math.cos(angle) * 800);    
+    // default distance and duration
+    let animationDuration = 750; // 0.75 sec
+    let distance = 1000;
     
-    if(distanceY > 0)
-        distanceY = distanceY * -1;
-
-    currentBubble.dom.style.transform = "translate(" + distanceX + "px," + distanceY + "px)";
-    currentBubble.dom.style.webkitTransform = "translate(" + distanceX + "px," + distanceY + "px)";
-//    currentBubble.dom.setAttribute("style", "-webkit-transform: " + "translate(" + distanceX + "px," + distanceY + "px)");
+    let collisionHappened = Collision.findIntersection(angle, UI.currentBubble);
+    
+    let animationCallback;
+    let newBubble = Bubble.deepCopy(UI.currentBubble);
+    UI.board.appendChild(newBubble.dom);
+    UI.currentBubble.changeType();
+    
+    // if collision occurs change distance and duration.
+    if (collisionHappened) {
+        animationDuration = animationDuration * collisionHappened.distanceToCollision / distance;
+        distance = collisionHappened.distanceToCollision;
+        
+        animationCallback = function () {
+//            UI.currentBubble.dom.removeAttribute("id");
+            Board.addBubble(newBubble, collisionHappened.coords);
+            UI.drawBoard();
+        }
+    } // end if
+    
+    else {
+//        UI.setNewBubblePosition();
+        animationCallback = function () {
+            newBubble.dom.remove();
+            
+        }
+    } // end else
+    
+    // fire up the animation
+    UI.startBallAnimation(newBubble, angle, animationDuration, distance, animationCallback);
+    
+    
     event.preventDefault();
 
 }
 
-function getNextBubble() {
-    var nextBubble = Bubble.create();
+function getAngleFromDevice (deviceXY) {
+//    alert("in the get Angle");
+    let BubbleXY = {
+        x: UI.currentBubble.dom.getBoundingClientRect().left + UI.currentBubble.dom.getBoundingClientRect().width /2,
+        y: UI.currentBubble.dom.getBoundingClientRect().top + UI.currentBubble.dom.getBoundingClientRect().height /2
+    };
     
-    // make the new bubble the current bubble, then add it to the dom
-    nextBubble.dom.classList.add("curr_bubble");
-    board.appendChild(nextBubble.dom);
+    let fireAngle = Math.atan((deviceXY.x - BubbleXY.x) / (BubbleXY.y - deviceXY.y));
     
-    return nextBubble;
+//    let fireAngle = Math.atan2((deviceXY.x - BubbleXY.x) , (BubbleXY.y - deviceXY.y));
+
+    
+     //if the player fired the ball at aproximatly horizontal level
+//    if(deviceXY.y > BubbleXY.y) {
+//        fireAngle = fireAngle + Math.PI;
+//    }
+    
+    return fireAngle;
 }
+

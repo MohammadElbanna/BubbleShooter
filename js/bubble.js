@@ -1,13 +1,69 @@
-function Bubble (domElement) {
+import * as UI from "./ui.js";
+
+function Bubble (domElement, row, col, type) {
+    domElement.classList.add("bubble");
+    domElement.classList.add("bubble" + type);
     this.dom = domElement;
+    this.col = col;
+    this.row = row;
+    this.type = type;
 }
 
-export let create = function () {
+Bubble.prototype.setType = function (type) {
+    this.type = type;
+}
+
+Bubble.prototype.setDOM = function (newDom) {
+    this.dom = newDom;
+}
+
+Bubble.prototype.setCoords = function (left, top) {
+    this.left = left;
+    this.top = top;
+}
+
+Bubble.prototype.setCol = function(col) {
+    this.col = col;
+}
+
+Bubble.prototype.setRow = function (row) {
+    this.row = row;
+}
+
+Bubble.prototype.getCoords = function () {
+    return {
+        left: this.left,
+        top: this.top
+    };
+}
+
+Bubble.prototype.changeType = function (type) {
+    this.dom.classList.remove("bubble" + this.type);
+    if (type === undefined) {
+        type = Math.floor(Math.random() * 4);
+    }
+    this.setType(type);
+    this.dom.classList.add("bubble" + type);
+}
+
+export let create = function (row, col, type) {
     let bubbleDOM = document.createElement("div");
-    bubbleDOM.classList.add("bubble");
-    bubbleDOM.classList.add("bubble3");
-    let newBubble = new Bubble(bubbleDOM);
+    
+    if (type === undefined) {
+        type = Math.floor(Math.random() * 4);
+    }
+    let newBubble = new Bubble(bubbleDOM, row, col, type);
     
     return newBubble;
     
+}
+
+export let deepCopy = function (copiedBubble) {
+    let newBubbleDom = document.createElement("div");
+    newBubbleDom.style.left = copiedBubble.dom.style.left;
+    newBubbleDom.style.top = copiedBubble.dom.style.top;
+    newBubbleDom.style.width = copiedBubble.dom.style.width;
+    newBubbleDom.style.height = copiedBubble.dom.style.height;
+    
+    return new Bubble (newBubbleDom, -1, -1, copiedBubble.type);
 }
