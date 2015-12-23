@@ -48,24 +48,40 @@ export function startBallAnimation (firedBubble, angle, duration, distance, anim
     let numberOfIterations = Math.ceil(duration / 16); 
     let xEveryFrame = distanceX / numberOfIterations;
     let yEveryFrame = distanceY / numberOfIterations;
-        
-    let animationLoop = function () {
-        firedBubble.dom.style.left = (parseFloat(firedBubble.dom.style.left) + xEveryFrame) + "px";
-        firedBubble.dom.style.top = (parseFloat(firedBubble.dom.style.top) - yEveryFrame) + "px";
-        
-        numberOfIterations --;
-        if (numberOfIterations === 0) {
-            cancelAnimationFrame(loopID);
-            animationCallback();
-        }
-        else {
-            loopID = requestAnimationFrame(animationLoop);
-        }
-    }
     
-    let loopID = requestAnimationFrame(animationLoop);
+        
+//    let animationLoop = function () {
+//        firedBubble.dom.style.left = (parseFloat(firedBubble.dom.style.left) + xEveryFrame) + "px";
+//        firedBubble.dom.style.top = (parseFloat(firedBubble.dom.style.top) - yEveryFrame) + "px";
+//        
+//        numberOfIterations --;
+//        if (numberOfIterations === 0) {
+//            cancelAnimationFrame(loopID);
+//            animationCallback();
+//        }
+//        else {
+//            loopID = requestAnimationFrame(animationLoop);
+//        }
+//    }
+//    
+//    let loopID = requestAnimationFrame(animationLoop);
     
-//    UI.firedBubble.dom.style.transform = "translate(" + distanceX + "px," + distanceY + "px)";
+    firedBubble.dom.addEventListener("transitionend", function () {
+        animationCallback();
+    }, false);
+    firedBubble.dom.style.transition = "transform " + (duration/1000) + "s ease-out";
+    firedBubble.dom.style.transition = "-webkit-transform " + (duration/1000) + "s ease-out";
+//    firedBubble.dom.style.transition = "-webkit-transform " + 1 + "s ease-out";
+//    firedBubble.dom.style.transition = "transform " + 1 + "s ease-out";
+
+
+//        firedBubble.dom.style.transition = "transform " + 0.5 + "s linear";
+    setTimeout(() => {
+        firedBubble.dom.style.webkitTransform = "translate(" + distanceX + "px," + (-distanceY + spriteRadius) + "px)";
+        firedBubble.dom.style.transform = "translate(" + distanceX + "px," + (-distanceY + spriteRadius) + "px)";        
+    }, 50);
+
+
 }   
     
 export function prepareNextBubble() {
@@ -128,6 +144,62 @@ export function setNewBubblePosition() {
     currentBubble.dom.style.height = width;
 //    currentBubble.dom.classList.add("curr_bubble");
 }
+    
+
+export function dropBubbles(orphanBubbles) {
+    let partialApplication = function () {
+        for(let i = 0; i < orphanBubbles.length; i++) {
+            let bubble = orphanBubbles[i];
+            let bubbleDom = document.getElementById(bubble.row + "" + bubble.col);
+            bubbleDom.addEventListener("transitionend", function () {
+                Board.deleteBubble(bubble)
+                bubbleDom.remove();
+            }, false);
+            
+//            bubbleDom.style.transition = "transform " + 1.2 + "s cubic-bezier(0.59,-0.05, 0.74, 0.05)";
+            bubbleDom.style.transition = "-webkit-transform " + 0.8 + "s cubic-bezier(0.59,-0.05, 0.74, 0.05)";
+
+
+            bubbleDom.style.transform = "translate(" + 100 + "px," + 1500 + "px)";
+            bubbleDom.style.webkitTransform = "translate(" + 0 + "px," + 1500 + "px)";
+        }
+    }
+    
+    return partialApplication;
+}
+
+    
+export function animateVanish (bubbleDom, bubble, animateCallback) {
+    let numOfIteration = 15;
+    let counter = numOfIteration;
+    
+    let animateBubble = function () {
+        if(counter == numOfIteration) {
+            bubbleDom.style.backgroundPosition = "33.33333333% " + bubble.getHeightPosFromType() + "%";
+        }
+        else if(counter == Math.floor(numOfIteration * 2/3)) {
+            bubbleDom.style.backgroundPosition = "66.66666667%" + bubble.getHeightPosFromType() + "%";
+        }
+        else if(counter == Math.floor(numOfIteration * 1/3)) {
+            bubbleDom.style.backgroundPosition = "100%" + bubble.getHeightPosFromType() + "%";
+        }
+        if(counter == 0) {
+            bubbleDom.remove();
+            cancelAnimationFrame(loopID);
+            if(animateCallback) {
+                // if it was the last bubble to be animated then we want to animate orphans if the exist
+                animateCallback();
+            }
+        }
+        else {
+            counter --;
+            loopID = requestAnimationFrame(animateBubble);            
+        }
+    }   
+    
+    let loopID = requestAnimationFrame(animateBubble);
+}
+
     
     
 export function drawBoard() {

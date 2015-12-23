@@ -94,73 +94,22 @@ function ballFiredHandler(event) {
 
 }
 
-function dropBubbles(orphanBubbles) {
-    let partialApplication = function () {
-        for(let i = 0; i < orphanBubbles.length; i++) {
-            let bubble = orphanBubbles[i];
-            let bubbleDom = document.getElementById(bubble.row + "" + bubble.col);
-            bubbleDom.addEventListener("transitionend", function () {
-                Board.deleteBubble(bubble)
-                bubbleDom.remove();
-            }, false);
-            bubbleDom.style.transform = "translate(" + 0 + "px," + 1500 + "px)";
-            bubbleDom.style.webkitTransform = "translate(" + 0 + "px," + 1500 + "px)";
-        }
-    }
-    
-    return partialApplication;
-}
-
-
-
 
 function popBubbles (bubbles){
     bubbles.forEach(bubble => Board.deleteBubble(bubble));
+    // get the orphans 
     let orphans = Board.findOrphans();
     
     bubbles.forEach( (bubble, index) => {
         let bubbleDom = document.getElementById(bubble.row + "" + bubble.col);
         // if it was the last ball animated then we want to drop bubbles if existed
         if((orphans.length > 0) && (index == bubbles.length - 1))
-            animateVanish(bubbleDom, bubble, dropBubbles(orphans));
+            UI.animateVanish(bubbleDom, bubble, UI.dropBubbles(orphans));
         else
-            animateVanish(bubbleDom, bubble);
+            UI.animateVanish(bubbleDom, bubble);
     });
 }
 
-
-
-
-function animateVanish (bubbleDom, bubble, animateCallback) {
-    let numOfIteration = 15;
-    let counter = numOfIteration;
-    
-    let animateBubble = function () {
-        if(counter == numOfIteration) {
-            bubbleDom.style.backgroundPosition = "33.33333333% " + bubble.getHeightPosFromType() + "%";
-        }
-        else if(counter == Math.floor(numOfIteration * 2/3)) {
-            bubbleDom.style.backgroundPosition = "66.66666667%" + bubble.getHeightPosFromType() + "%";
-        }
-        else if(counter == Math.floor(numOfIteration * 1/3)) {
-            bubbleDom.style.backgroundPosition = "100%" + bubble.getHeightPosFromType() + "%";
-        }
-        if(counter == 0) {
-            bubbleDom.remove();
-            cancelAnimationFrame(loopID);
-            if(animateCallback) {
-                // if it was the last bubble to be animated then we want to animate orphans if the exist
-                animateCallback();
-            }
-        }
-        else {
-            counter --;
-            loopID = requestAnimationFrame(animateBubble);            
-        }
-    }   
-    
-    let loopID = requestAnimationFrame(animateBubble);
-}
 
 function getAngleFromDevice (deviceXY) {
 //    alert("in the get Angle");

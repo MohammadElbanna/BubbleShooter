@@ -2,8 +2,10 @@
     background-size: 400% 400%;
     position: absolute;
     background-image: url('../assets/bubble_sprite_sheet.png');
+/*
     transition: transform 2s ease-in;
     transition: -webkit-transform 1.2s ease-in;
+*/
 }
 
 
