@@ -103,7 +103,8 @@ function dropBubbles(orphanBubbles) {
                 Board.deleteBubble(bubble)
                 bubbleDom.remove();
             }, false);
-            bubbleDom.style.transform = "translate(" + 0 + "px," + 1000 + "px)";
+            bubbleDom.style.transform = "translate(" + 0 + "px," + 1500 + "px)";
+            bubbleDom.style.webkitTransform = "translate(" + 0 + "px," + 1500 + "px)";
         }
     }
     
