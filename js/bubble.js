@@ -46,6 +46,21 @@ Bubble.prototype.changeType = function (type) {
     this.dom.classList.add("bubble" + type);
 }
 
+Bubble.prototype.getHeightPosFromType = function () {
+    if (this.type == 0) {
+        return 0;
+    }
+    if (this.type == 1) {
+        return 33.33333333;
+    }
+    if (this.type == 2) {
+        return 66.66666667;
+    }
+    if (this.type == 3) {
+        return 100;
+    }
+}
+
 export let create = function (row, col, type) {
     let bubbleDOM = document.createElement("div");
     

@@ -128,7 +128,8 @@ export function setNewBubblePosition() {
     currentBubble.dom.style.height = width;
 //    currentBubble.dom.classList.add("curr_bubble");
 }
-
+    
+    
 export function drawBoard() {
     let boardArray = Board.getBoardArray();
 //    let fragment = document.createDocumentFragment();
@@ -156,7 +157,7 @@ export function drawBoard() {
                 // update the coords in the bubble object (these coords are coords of the center of the bubble)
                 bubble.setCoords(left +  board.getBoundingClientRect().left + bubbleRadius, top + board.getBoundingClientRect().top + bubbleRadius);
                 
-                htmlString += "<div class='bubble bubble" + bubble.type + "' style='left: " + left + "px; top: " + top +
+                htmlString += "<div id='" + i + "" + j + "' class='bubble bubble" + bubble.type + "' style='left: " + left + "px; top: " + top +
                     "px; width: " + width + "px;height: " + width + "px;' ></div>";
             }
         }
