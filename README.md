@@ -1,5 +1,5 @@
 #Bubbleshooter
-This repo is about building a responsive bubbleshooter game that work almost everywhere using vanilla js.
+This repo is about building a responsive bubbleshooter game that works almost everywhere using vanilla js.
 
 ###Demo
 The game is better suited in portrait mode. You can try it [here](http://mohammadelbanna.github.io/BubbleShooter/).
