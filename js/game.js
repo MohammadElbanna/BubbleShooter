@@ -85,6 +85,9 @@ function ballFiredHandler(event) {
                 if (Board.totalNumberOfBubbles == 0) {
                     // use setTimeput to show a box that you won the game
                     setTimeout(() => alert("you won the game!"), 400);
+                    UI.gameBoard.removeEventListener("touchstart", ballFiredHandler);
+                    UI.gameBoard.removeEventListener("click", ballFiredHandler);
+
 //                    alert("you won the game");
                 }
                 
