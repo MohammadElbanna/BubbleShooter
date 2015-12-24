@@ -48,10 +48,10 @@ h1 {
 
 #board {
     position: relative;
-    outline: dotted black 5px;
+/*    outline: dotted black 5px;*/
 /*    left: 10vh;*/
     margin: 0 auto;
-    overflow: hidden;
+/*    overflow: hidden;*/
 /*    width: 90vmin;*/
 /*    height: 100%;*/
 }
