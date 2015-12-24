@@ -11,7 +11,7 @@ All objects in the game are _**\<div\>**_ elements that are moving using CSS3 tr
 ###MVC approach
 This implementation was an experiment to build a game using the MVC approach where:  
 _**M**_ represents model or the state of the game,  
-_**V**_ represents the view layer or how different objects are rendered on the screen
+_**V**_ represents the view layer or how different objects are rendered on the screen  
 _**C**_ represents the controller layer or 
 how to respond to different user inputs or external events in order to update the view and the state correspondingly.
 
@@ -19,6 +19,7 @@ how to respond to different user inputs or external events in order to update th
 * Babel
 * Browserify to use ES6 module syntax
 * BrowserSync
+* gulp as a build tool
 
 ### Acknowledgments
 Much of the implementation of the game was inspired by Karl Bunyan's book [Build an HTML5 game](http://www.amazon.com/Build-HTML5-Game-Developers-JavaScript/dp/1593275757),
