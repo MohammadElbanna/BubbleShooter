@@ -9,7 +9,8 @@ let timer = {
 let timerID ;
 
 export function init () {
-    timerID = setInterval(updateTimer, 1000);
+//    timerID = setInterval(updateTimer, 1000);
+    UI.renderScore(score);
 }
 
 // let timerID = setInterval(updateTimer, 1000);

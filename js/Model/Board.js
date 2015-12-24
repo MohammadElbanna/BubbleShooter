@@ -6,16 +6,25 @@ export let NUM_COL;
 
 let boardArray = [];
 
-let totalNumberOfBubbles = 0;
+export let totalNumberOfBubbles = 0;
+
+export let numberOfAllowedRows = 0;
 
 export function init (numRows, numCols) {
     NUM_ROW = numRows;
     NUM_COL = numCols;
-    totalNumberOfBubbles = NUM_ROW * NUM_COL;
+    totalNumberOfBubbles = NUM_ROW * NUM_COL /2;
     
     createBoardArray();    
 }
 
+export function setNumberOfAllowedRows(number) {
+    numberOfAllowedRows = number;
+}
+export function updateTotalNumberOfBubbles (addedValue) {
+    totalNumberOfBubbles += addedValue;
+}
+    
 let Board = function () {
     let bubbleArray = createBubbleArray();
     

@@ -15,7 +15,7 @@ export function init() {
 }
     
 function startGame () {
-    Board.init(5,30);
+    Board.init(4,24);
     UI.init();
     UI.newGameButton.removeEventListener("click", startGame);
     UI.hideDialog();
@@ -81,9 +81,25 @@ function ballFiredHandler(event) {
                 // update score
                 State.updateScore(group.list.length * 10);
 //                UI.drawBoard();
+                // check for winning the game
+                if (Board.totalNumberOfBubbles == 0) {
+                    // use setTimeput to show a box that you won the game
+                    setTimeout(() => alert("you won the game!"), 400);
+//                    alert("you won the game");
+                }
+                
+            }
+            else {
+                Board.updateTotalNumberOfBubbles(1);
+                
+                if(Board.NUM_ROW >= Board.numberOfAllowedRows) {
+                    alert("game over!");
+                    UI.gameBoard.removeEventListener("touchstart", ballFiredHandler);
+                    UI.gameBoard.removeEventListener("click", ballFiredHandler);
+                }
             }
         }
-    } // end if
+    } // end if collisionHappened
     
     else {
         animationCallback = function () {
@@ -104,6 +120,10 @@ function popBubbles (bubbles){
     bubbles.forEach(bubble => Board.deleteBubble(bubble));
     // get the orphans 
     let orphans = Board.findOrphans();
+    // update the tracked number of bubbles
+    Board.updateTotalNumberOfBubbles(-(bubbles.length -1 + orphans.length));
+//    Board.totalNumberOfBubbles -= (bubbles.length + orphans.length);
+
     // update score from the orphans
     State.updateScore(orphans.length * 20);
     

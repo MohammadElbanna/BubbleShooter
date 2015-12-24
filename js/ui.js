@@ -115,6 +115,9 @@ export function resize () {
     bubbleRadius = (boardWidth / (numOfCol +1)) / 2;
     spriteRadius = bubbleRadius / 0.88;
     
+    // update the number of allowed rows to detect game over
+    Board.setNumberOfAllowedRows(Math.floor(boardHeight / (bubbleRadius*2) ));
+    
     board.style.width = boardWidth + "px";
     board.style.height = boardHeight + "px";
     
