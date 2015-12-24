@@ -1,6 +1,10 @@
-body, html {
+body, html{
     margin: 0;    
     height: 100%;
+}
+
+h1 {
+    margin: 0;
 }
 
 #page {
@@ -14,7 +18,21 @@ body, html {
 #topbar {
     height: 10%;
     background-color: #369;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
 }
+
+#score {
+/*    margin-left: 30%;*/
+    font-size: 4vmin;
+    order: 1;
+}
+
+#timer {
+    font-size: 4vmin;
+}
+
 
 #footer {
     background-color: #369;

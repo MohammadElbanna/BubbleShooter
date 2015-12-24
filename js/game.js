@@ -2,6 +2,7 @@ import * as UI from "./ui.js";
 import * as Bubble from "./bubble.js";
 import * as Board from "./Model/Board.js";
 import * as Collision from "./collisionDetector.js";
+import * as State from "./Model/Misc.js";
 
 let board ;
 
@@ -30,6 +31,8 @@ function startGame () {
     // add event listner for mouse clicks on the board
     UI.gameBoard.addEventListener("touchstart", ballFiredHandler);
     UI.gameBoard.addEventListener("click", ballFiredHandler);
+    
+    State.init();
 }
 
 function ballFiredHandler(event) {
@@ -75,6 +78,8 @@ function ballFiredHandler(event) {
             UI.drawBoard();
             if(group.list.length >= 3) {
                 popBubbles(group.list);
+                // update score
+                State.updateScore(group.list.length * 10);
 //                UI.drawBoard();
             }
         }
@@ -99,6 +104,8 @@ function popBubbles (bubbles){
     bubbles.forEach(bubble => Board.deleteBubble(bubble));
     // get the orphans 
     let orphans = Board.findOrphans();
+    // update score from the orphans
+    State.updateScore(orphans.length * 20);
     
     bubbles.forEach( (bubble, index) => {
         let bubbleDom = document.getElementById(bubble.row + "" + bubble.col);

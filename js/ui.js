@@ -10,6 +10,9 @@ export let footer = document.getElementById("footer");
 
 export let board = document.getElementById("board");
 
+let scoreDom = document.getElementById("score");
+let timeDom = document.getElementById("timer");
+
 
 export let boardWidth;
 export let boardHeight;
@@ -68,6 +71,7 @@ export function startBallAnimation (firedBubble, angle, duration, distance, anim
     
     firedBubble.dom.addEventListener("transitionend", function () {
         animationCallback();
+        firedBubble.dom.removeEventListener("transitionend");
     }, false);
     firedBubble.dom.style.transition = "transform " + (duration/1000) + "s ease-out";
     firedBubble.dom.style.transition = "-webkit-transform " + (duration/1000) + "s ease-out";
@@ -79,7 +83,7 @@ export function startBallAnimation (firedBubble, angle, duration, distance, anim
     setTimeout(() => {
         firedBubble.dom.style.webkitTransform = "translate(" + distanceX + "px," + (-distanceY + spriteRadius) + "px)";
         firedBubble.dom.style.transform = "translate(" + distanceX + "px," + (-distanceY + spriteRadius) + "px)";        
-    }, 50);
+    }, 20);
 
 
 }   
@@ -153,6 +157,7 @@ export function dropBubbles(orphanBubbles) {
             let bubbleDom = document.getElementById(bubble.row + "" + bubble.col);
             bubbleDom.addEventListener("transitionend", function () {
                 Board.deleteBubble(bubble)
+                bubbleDom.removeEventListener("transitionend");
                 bubbleDom.remove();
             }, false);
             
@@ -160,8 +165,8 @@ export function dropBubbles(orphanBubbles) {
             bubbleDom.style.transition = "-webkit-transform " + 0.8 + "s cubic-bezier(0.59,-0.05, 0.74, 0.05)";
 
 
-            bubbleDom.style.transform = "translate(" + 100 + "px," + 1500 + "px)";
             bubbleDom.style.webkitTransform = "translate(" + 0 + "px," + 1500 + "px)";
+            bubbleDom.style.transform = "translate(" + 0 + "px," + 1500 + "px)";
         }
     }
     
@@ -240,5 +245,19 @@ export function drawBoard() {
 //    board.appendChild(fragment);
 //    cssRender(bubbleRadius * 2);
 //    boardInitiated = true;
+}
+    
+/*
+=========================
+Render timer and score
+=========================
+*/
+
+export function renderTime(timerState) {
+    timeDom.textContent = "Remaining time " + timerState.min + ":" + timerState.sec;
+}
+
+export function renderScore(scoreState) {
+    scoreDom.textContent = "Score: " + scoreState;
 }
 
